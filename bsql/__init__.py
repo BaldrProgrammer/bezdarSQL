@@ -38,11 +38,11 @@ def select(table, **kwargs):
         print('error', _e)
 
 
-def insert(obj):
-    request = f'insert into {obj.__tablename__} ('
-    attrs = [i for i in obj.__dict__ if '__' not in i]
+def insert(table_obj):
+    request = f'insert into {table_obj.__tablename__} ('
+    attrs = [i for i in table_obj.__dict__ if '__' not in i]
     for index, attr in enumerate(attrs):
-        value = getattr(obj, attr)
+        value = getattr(table_obj, attr)
         if hasattr(value, 'autoincrement'):
             if not value.autoincrement:
                 request += f'{attr}' + (', ' if not index+1 == len(attrs) else '')
@@ -51,10 +51,26 @@ def insert(obj):
 
     request += ') values ('
     for index, attr in enumerate(attrs):
-        value = getattr(obj, attr)
+        value = getattr(table_obj, attr)
         if hasattr(value, 'autoincrement'):
             if not value.autoincrement:
                 request += repr(value) + (', ' if not index+1 == len(attrs) else ');')
         else:
            request += repr(value) + (', ' if not index+1 == len(attrs) else ');')
-    print(request)
+
+    try:
+        with psycopg2.connect(
+                host=host,
+                port=port,
+                user=user,
+                database=db_name,
+                password=password,
+        ) as connection:
+            connection.autocommit = True
+            with connection.cursor() as cursor:
+                cursor.execute(request)
+            return True
+
+    except Exception as _e:
+        print('error', _e)
+        return False
