@@ -41,11 +41,22 @@ def select(table, **kwargs):
 def insert(obj):
     request = f'insert into {obj.__tablename__} ('
     attrs = [i for i in obj.__dict__ if '__' not in i]
-    for attr in attrs:
-        if hasattr(getattr(obj, attr), 'autoincrement'):
-            if not getattr(obj, attr).autoincrement:
-                request += f'{attr} '
+    for index, attr in enumerate(attrs):
+        value = getattr(obj, attr)
+        if hasattr(value, 'autoincrement'):
+            if not value.autoincrement:
+                request += f'{attr}, '
         else:
-           request += f'{attr} '
+            request += f'{attr}, '
+
     request += ') values ('
+    for index, attr in enumerate(attrs):
+        value = getattr(obj, attr)
+        if hasattr(value, 'autoincrement'):
+            if not value.autoincrement:
+                request += repr(value) + ', '
+        else:
+           request += repr(value) + ', '
+
+    request += ');'
     print(request)
