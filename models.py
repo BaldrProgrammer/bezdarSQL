@@ -7,6 +7,13 @@ class Ad(Base):
     title: str = Column()
     text: str = Column()
 
+    def __todict__(self):
+        return {
+            'id': self.id,
+            'title': self.title,
+            'text': self.text
+        }
+
 
 selected_ad = select(Ad, value='*', filter_by={'id': '1'})
-print()
+print(selected_ad.__todict__())

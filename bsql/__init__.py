@@ -25,8 +25,14 @@ def select(table, **kwargs):
                 cursor.execute(request + ';')
                 result = cursor.fetchone()
 
-                attrs = [i for i in dir(table) if not '__' in i]
-                print(attrs)
+                attrsintable = [i for i in table.__dict__ if not '__' in i]
+                attrs = {}
+                for index, attr in enumerate(attrsintable):
+                    attrs[attr] = result[index]
+                obj = table()
+                obj.__dict__.update(attrs)
+
+                return obj
 
     except Exception as _e:
         print('error', _e)
