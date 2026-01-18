@@ -45,18 +45,16 @@ def insert(obj):
         value = getattr(obj, attr)
         if hasattr(value, 'autoincrement'):
             if not value.autoincrement:
-                request += f'{attr}, '
+                request += f'{attr}' + (', ' if not index+1 == len(attrs) else '')
         else:
-            request += f'{attr}, '
+            request += f'{attr}' + (', ' if not index+1 == len(attrs) else '')
 
     request += ') values ('
     for index, attr in enumerate(attrs):
         value = getattr(obj, attr)
         if hasattr(value, 'autoincrement'):
             if not value.autoincrement:
-                request += repr(value) + ', '
+                request += repr(value) + (', ' if not index+1 == len(attrs) else ');')
         else:
-           request += repr(value) + ', '
-
-    request += ');'
+           request += repr(value) + (', ' if not index+1 == len(attrs) else ');')
     print(request)
