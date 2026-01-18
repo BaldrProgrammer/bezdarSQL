@@ -36,3 +36,9 @@ def select(table, **kwargs):
 
     except Exception as _e:
         print('error', _e)
+
+
+def insert(obj, **kwargs):
+    request = f'insert into {obj.__tablename__} ('
+    attrs = [i for i in dir(obj) if '__' not in i]
+    print(attrs)

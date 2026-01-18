@@ -1,11 +1,17 @@
-from bsql import select
+import dataclasses
+
+from bsql import select, insert
 from bsql.base import Base, Column
 
-class Ad(Base):
-    __tablename__ = 'ads'
-    id: int = Column()
+from typing import Optional
+
+@dataclasses.dataclass
+class News(Base):
+    __tablename__ = 'news'
+    id: Optional[int] = None
     title: str = Column()
     text: str = Column()
+    author_id: int = Column()
 
     def __todict__(self):
         return {
@@ -13,7 +19,7 @@ class Ad(Base):
             'title': self.title,
             'text': self.text
         }
+my_news = News(title='europe overtakes us army', text='european army budget rised to 3 trillion euro, what is 5% from their gdp - 61trillion. leader is germany with 500 billion.', author_id=1)
 
 
-selected_ad = select(Ad, value='*', filter_by={'id': '1'})
-print(selected_ad.__todict__())
+insert(News)
