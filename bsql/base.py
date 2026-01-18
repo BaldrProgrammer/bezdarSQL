@@ -2,7 +2,8 @@ import dataclasses
 
 
 class Column:
-    pass
+    def __init__(self, **kwargs):
+        self.autoincrement = kwargs.get('autoincrement')
 
 @dataclasses.dataclass
 class Base:

@@ -8,7 +8,7 @@ from typing import Optional
 @dataclasses.dataclass
 class News(Base):
     __tablename__ = 'news'
-    id: Optional[int] = None
+    id: int = Column(autoincrement=True)
     title: str = Column()
     text: str = Column()
     author_id: int = Column()
@@ -21,5 +21,4 @@ class News(Base):
         }
 my_news = News(title='europe overtakes us army', text='european army budget rised to 3 trillion euro, what is 5% from their gdp - 61trillion. leader is germany with 500 billion.', author_id=1)
 
-
-insert(News)
+insert(my_news)
