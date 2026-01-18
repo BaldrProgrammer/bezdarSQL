@@ -23,8 +23,10 @@ def select(table, **kwargs):
             connection.autocommit = True
             with connection.cursor() as cursor:
                 cursor.execute(request + ';')
+                result = cursor.fetchone()
 
-                return cursor.fetchall()
+                attrs = [i for i in dir(table) if not '__' in i]
+                print(attrs)
 
     except Exception as _e:
         print('error', _e)
