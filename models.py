@@ -3,8 +3,6 @@ import dataclasses
 from bsql import update
 from bsql.base import Base, Column
 
-from typing import Optional
-
 @dataclasses.dataclass
 class News(Base):
     __tablename__ = 'news'
