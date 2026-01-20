@@ -45,7 +45,7 @@ def select(table, value='*', filter_by=None, count=1):
                 return objects
 
     except Exception as _e:
-        print('error', _e)
+        raise _e
 
 
 def insert(table_obj):
