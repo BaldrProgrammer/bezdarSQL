@@ -1,6 +1,6 @@
 import dataclasses
 
-from bsql import delete
+from bsql import select
 from bsql.base import Base, Column
 
 @dataclasses.dataclass
@@ -18,5 +18,4 @@ class News(Base):
             'text': self.text
         }
 
-
-delete(News, where={'id': 6, 'author_id': 1})
+print(select(News, value='*'))

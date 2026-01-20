@@ -3,15 +3,18 @@ import psycopg2
 
 
 def select(table, **kwargs):
-    request = f'select {kwargs['value']} from {table.__tablename__} where '
-    filters = kwargs['filter_by']
+    request = f'select {kwargs['value']} from {table.__tablename__}'
+    filters = kwargs.get('filter_by')
     index = 0
-    for fil in filters:
-        index += 1
-        if index > 1:
-            request += f'and {fil}={filters[fil]} '
-        else:
-            request += f'{fil}={filters[fil]} '
+    if filters:
+        request += ' where '
+        for index, fil in enumerate(filters):
+            if index > 1:
+                request += f'and {fil}={filters[fil]} '
+            else:
+                request += f'{fil}={filters[fil]} '
+    else:
+        request += ';'
 
     try:
         with psycopg2.connect(
