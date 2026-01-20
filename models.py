@@ -1,6 +1,6 @@
 import dataclasses
 
-from bsql import update
+from bsql import delete
 from bsql.base import Base, Column
 
 @dataclasses.dataclass
@@ -19,4 +19,4 @@ class News(Base):
         }
 
 
-update(News, values={'author_id': 1, 'title': 'putin dies'}, where={'id': 3})
+delete(News, where={'id': 3, 'author_id': 2})

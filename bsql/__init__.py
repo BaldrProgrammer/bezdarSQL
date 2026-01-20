@@ -103,3 +103,11 @@ def update(table, **kwargs):
     except Exception as _e:
         print('error', _e)
         return False
+
+
+def delete(table, **kwargs):
+    request = f'delete from {table.__tablename__} where '
+    where_s = kwargs['where']
+    for index, where in enumerate(where_s):
+        request += f'{where}={repr(where_s[where])} ' + ('and ' if index + 1 != len(where_s) else ';')
+    print(request)
