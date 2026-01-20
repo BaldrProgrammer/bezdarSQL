@@ -2,10 +2,9 @@ from .config import *
 import psycopg2
 
 
-def select(table, **kwargs):
-    request = f'select {kwargs['value']} from {table.__tablename__}'
-    filters = kwargs.get('filter_by')
-    index = 0
+def select(table, value='*', filter_by=None, count=1):
+    request = f'select {value} from {table.__tablename__}'
+    filters = filter_by
     if filters:
         request += ' where '
         for index, fil in enumerate(filters):
@@ -27,16 +26,23 @@ def select(table, **kwargs):
             connection.autocommit = True
             with connection.cursor() as cursor:
                 cursor.execute(request + ';')
-                result = cursor.fetchone()
+
+                if count >= 0:
+                    results = cursor.fetchmany(count)
+                elif count == -1:
+                    results = cursor.fetchall()
 
                 attrsintable = [i for i in table.__dict__ if not '__' in i]
                 attrs = {}
-                for index, attr in enumerate(attrsintable):
-                    attrs[attr] = result[index]
-                obj = table()
-                obj.__dict__.update(attrs)
+                objects = []
+                for result in results:
+                    for index, attr in enumerate(attrsintable):
+                        attrs[attr] = result[index]
+                    obj = table()
+                    obj.__dict__.update(attrs)
+                    objects.append(obj)
 
-                return obj
+                return objects
 
     except Exception as _e:
         print('error', _e)

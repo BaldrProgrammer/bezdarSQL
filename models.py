@@ -18,4 +18,4 @@ class News(Base):
             'text': self.text
         }
 
-print(select(News, value='*'))
+print(select(News, count=-1))
