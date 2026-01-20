@@ -19,4 +19,4 @@ class News(Base):
         }
 
 
-delete(News, where={'id': 3, 'author_id': 2})
+delete(News, where={'id': 6, 'author_id': 1})

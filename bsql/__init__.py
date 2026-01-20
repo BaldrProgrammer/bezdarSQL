@@ -110,4 +110,19 @@ def delete(table, **kwargs):
     where_s = kwargs['where']
     for index, where in enumerate(where_s):
         request += f'{where}={repr(where_s[where])} ' + ('and ' if index + 1 != len(where_s) else ';')
-    print(request)
+
+    try:
+        with psycopg2.connect(
+                host=host,
+                port=port,
+                user=user,
+                database=db_name,
+                password=password,
+        ) as connection:
+            connection.autocommit = True
+            with connection.cursor() as cursor:
+                cursor.execute(request)
+            return True
+    except Exception as _e:
+        print('error', _e)
+        return False
