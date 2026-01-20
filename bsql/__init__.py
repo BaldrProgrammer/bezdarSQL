@@ -1,6 +1,7 @@
 from .config import *
 import psycopg2
 
+
 def select(table, **kwargs):
     request = f'select {kwargs['value']} from {table.__tablename__} where '
     filters = kwargs['filter_by']
@@ -45,18 +46,18 @@ def insert(table_obj):
         value = getattr(table_obj, attr)
         if hasattr(value, 'autoincrement'):
             if not value.autoincrement:
-                request += f'{attr}' + (', ' if not index+1 == len(attrs) else '')
+                request += f'{attr}' + (', ' if not index + 1 == len(attrs) else '')
         else:
-            request += f'{attr}' + (', ' if not index+1 == len(attrs) else '')
+            request += f'{attr}' + (', ' if not index + 1 == len(attrs) else '')
 
     request += ') values ('
     for index, attr in enumerate(attrs):
         value = getattr(table_obj, attr)
         if hasattr(value, 'autoincrement'):
             if not value.autoincrement:
-                request += repr(value) + (', ' if not index+1 == len(attrs) else ');')
+                request += repr(value) + (', ' if not index + 1 == len(attrs) else ');')
         else:
-           request += repr(value) + (', ' if not index+1 == len(attrs) else ');')
+            request += repr(value) + (', ' if not index + 1 == len(attrs) else ');')
 
     try:
         with psycopg2.connect(
@@ -74,3 +75,15 @@ def insert(table_obj):
     except Exception as _e:
         print('error', _e)
         return False
+
+
+def update(table, **kwargs):
+    request = f'update {table.__tablename__} set '
+    values = kwargs['values']
+    for index, value in enumerate(values):
+        request += f'{value}={repr(values[value])} ' + (', ' if index+1 != len(values) else 'where ')
+
+    where_s = kwargs['where']
+    for index, where in enumerate(where_s):
+        request += f'{where}={repr(where_s[where])} ' + (', ' if index+1 != len(where_s) else ';')
+    print(request)

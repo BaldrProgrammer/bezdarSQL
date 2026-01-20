@@ -1,6 +1,6 @@
 import dataclasses
 
-from bsql import select, insert
+from bsql import update
 from bsql.base import Base, Column
 
 from typing import Optional
@@ -19,6 +19,6 @@ class News(Base):
             'title': self.title,
             'text': self.text
         }
-my_news = News(title='europe overtakes us army', text='european army budget rised to 3 trillion euro, what is 5% from their gdp - 61trillion. leader is germany with 500 billion.', author_id=1)
 
-insert(my_news)
+
+update(News, values={'author_id': 1, 'title': 'putin dies'}, where={'id': 3})
