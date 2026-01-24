@@ -9,9 +9,9 @@ def select(table, value='*', filter_by=None, count=1):
         request += ' where '
         for index, fil in enumerate(filters):
             if index > 1:
-                request += f'and {fil}={repr(filters[fil])} '
+                request += f'and {fil.owner.__tablename__}.{fil.name}={repr(filters[fil])} '
             else:
-                request += f'{fil}={repr(filters[fil])} '
+                request += f'{fil.owner.__tablename__}.{fil.name}={repr(filters[fil])} '
     else:
         request += ';'
 

@@ -1,4 +1,4 @@
-from bezdarsql import select_join
+from bezdarsql import select, select_join
 import dataclasses
 from bezdarsql.base import Base, Column
 
@@ -25,4 +25,5 @@ class Relief(Base):
     discount: int = Column()
 
 
-print(select_join((User, Relief), value='*', filter_on=({User.ulga: Relief.id})))
+# print(select_join((User, Relief), value='*', filter_on=({User.ulga: Relief.id})))
+print(select(User, value='*', filter_by={User.id: 13}))
