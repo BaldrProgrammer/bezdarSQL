@@ -48,6 +48,21 @@ def select(table, value='*', filter_by=None, count=1):
         raise _e
 
 
+def select_join(tables, value='*', filter_on=(), count=1):
+    request = f'select {value} from '
+    for index, table in enumerate(tables):
+        if index == 0:
+            request += f'{table.__tablename__} '
+        else:
+            request += f'join {table.__tablename__} on '
+            for indexx, fil in enumerate(filter_on):
+                if indexx > 1:
+                    request += f'and {fil}={filter_on[fil]} '
+                else:
+                    request += f'{fil}={filter_on[fil]} '
+    return request + ';'
+
+
 def insert(table_obj):
     request = f'insert into {table_obj.__tablename__} ('
     attrs = [i for i in table_obj.__dict__ if '__' not in i]
