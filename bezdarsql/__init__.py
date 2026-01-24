@@ -60,7 +60,38 @@ def select_join(tables, value='*', filter_on=(), count=1):
                     request += f'and {fil.owner.__tablename__}.{fil.name}={filter_on[fil].owner.__tablename__}.{filter_on[fil].name} '
                 else:
                     request += f'{fil.owner.__tablename__}.{fil.name}={filter_on[fil].owner.__tablename__}.{filter_on[fil].name} '
-    return request + ';'
+
+    try:
+        with psycopg2.connect(
+                host=host,
+                port=port,
+                user=user,
+                database=db_name,
+                password=password,
+        ) as connection:
+            connection.autocommit = True
+            with connection.cursor() as cursor:
+                return cursor.execute(request + ';')
+
+                # if count >= 0:
+                #     results = cursor.fetchmany(count)
+                # elif count == -1:
+                #     results = cursor.fetchall()
+                #
+                # attrsintable = [i for i in table.__dict__ if not '__' in i]
+                # attrs = {}
+                # objects = []
+                # for result in results:
+                #     for index, attr in enumerate(attrsintable):
+                #         attrs[attr] = result[index]
+                #     obj = table()
+                #     obj.__dict__.update(attrs)
+                #     objects.append(obj)
+
+                return objects
+
+    except Exception as _e:
+        raise _e
 
 
 def insert(table_obj):
