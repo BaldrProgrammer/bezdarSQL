@@ -57,9 +57,9 @@ def select_join(tables, value='*', filter_on=(), count=1):
             request += f'join {table.__tablename__} on '
             for indexx, fil in enumerate(filter_on):
                 if indexx > 1:
-                    request += f'and {fil}={filter_on[fil]} '
+                    request += f'and {fil.owner.__tablename__}.{fil.name}={filter_on[fil].owner.__tablename__}.{filter_on[fil].name} '
                 else:
-                    request += f'{fil}={filter_on[fil]} '
+                    request += f'{fil.owner.__tablename__}.{fil.name}={filter_on[fil].owner.__tablename__}.{filter_on[fil].name} '
     return request + ';'
 
 
