@@ -16,6 +16,7 @@ class User(Base):
     tickets: str = Column()
 
 
+@dataclasses.dataclass()
 class Relief(Base):
     __tablename__ = 'reliefs'
 
@@ -26,3 +27,4 @@ class Relief(Base):
 
 
 print(select_join((User, Relief), value='*', filter_on=({User.ulga: Relief.id})))
+print(select(User))

@@ -33,13 +33,11 @@ def select(table, value='*', filter_by=None, count=1):
                     results = cursor.fetchall()
 
                 attrsintable = [i for i in table.__dict__ if not '__' in i]
-                attrs = {}
                 objects = []
                 for result in results:
-                    for index, attr in enumerate(attrsintable):
-                        attrs[attr] = result[index]
                     obj = table()
-                    obj.__dict__.update(attrs)
+                    for index, attr in enumerate(attrsintable):
+                        obj.__dict__[attr] = result[index]
                     objects.append(obj)
 
                 return objects
@@ -72,22 +70,23 @@ def select_join(tables, value='*', filter_on=(), count=1):
             connection.autocommit = True
             with connection.cursor() as cursor:
                 cursor.execute(request + ';')
-                return cursor.fetchall()
 
-                # if count >= 0:
-                #     results = cursor.fetchmany(count)
-                # elif count == -1:
-                #     results = cursor.fetchall()
-                #
-                # attrsintable = [i for i in table.__dict__ if not '__' in i]
-                # attrs = {}
-                # objects = []
-                # for result in results:
-                #     for index, attr in enumerate(attrsintable):
-                #         attrs[attr] = result[index]
-                #     obj = table()
-                #     obj.__dict__.update(attrs)
-                #     objects.append(obj)
+                if count >= 0:
+                    results = cursor.fetchmany(count)
+                elif count == -1:
+                    results = cursor.fetchall()
+
+
+
+                objects = []
+                for result in results:
+                    for index, table in enumerate(tables):
+                        attrsintable = [i for i in table.__dict__ if not '__' in i]
+                        obj = table()
+                        for index, attr in enumerate(attrsintable):
+                            obj.__dict__[attr] = result[index]
+                        objects.append(obj)
+
 
                 return objects
 
