@@ -71,7 +71,8 @@ def select_join(tables, value='*', filter_on=(), count=1):
         ) as connection:
             connection.autocommit = True
             with connection.cursor() as cursor:
-                return cursor.execute(request + ';')
+                cursor.execute(request + ';')
+                return cursor.fetchall()
 
                 # if count >= 0:
                 #     results = cursor.fetchmany(count)
