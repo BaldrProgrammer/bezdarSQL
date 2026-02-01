@@ -27,4 +27,3 @@ class Relief(Base):
 
 
 print(select_join((User, Relief), value='*', filter_on=({User.ulga: Relief.id})))
-print(select(User))

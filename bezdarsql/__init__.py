@@ -76,8 +76,6 @@ def select_join(tables, value='*', filter_on=(), count=1):
                 elif count == -1:
                     results = cursor.fetchall()
 
-
-
                 objects = []
                 for result in results:
                     for index, table in enumerate(tables):
@@ -86,7 +84,7 @@ def select_join(tables, value='*', filter_on=(), count=1):
                         for index, attr in enumerate(attrsintable):
                             obj.__dict__[attr] = result[index]
                         objects.append(obj)
-
+                        result = result[len(attrsintable):]
 
                 return objects
 
