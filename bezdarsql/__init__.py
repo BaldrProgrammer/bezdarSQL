@@ -46,18 +46,25 @@ def select(table, value='*', filter_by=None, count=1):
         raise _e
 
 
-def select_join(tables, value='*', filter_on=(), count=1):
+def select_join(tables, value='*', filter_on=None, filter_by=None, count=1):
     request = f'select {value} from '
     for index, table in enumerate(tables):
         if index == 0:
             request += f'{table.__tablename__} '
         else:
             request += f'join {table.__tablename__} on '
-            for indexx, fil in enumerate(filter_on):
-                if indexx > 1:
-                    request += f'and {fil.owner.__tablename__}.{fil.name}={filter_on[fil].owner.__tablename__}.{filter_on[fil].name} '
-                else:
-                    request += f'{fil.owner.__tablename__}.{fil.name}={filter_on[fil].owner.__tablename__}.{filter_on[fil].name} '
+            if filter_on:
+                for indexx, fil in enumerate(filter_on):
+                    if indexx > 1:
+                        request += f'and {fil.owner.__tablename__}.{fil.name}={filter_on[fil].owner.__tablename__}.{filter_on[fil].name} '
+                    else:
+                        request += f'{fil.owner.__tablename__}.{fil.name}={filter_on[fil].owner.__tablename__}.{filter_on[fil].name} '
+            elif filter_by:
+                for index, fil in enumerate(filter_by):
+                    if index > 1:
+                        request += f'and {fil.owner.__tablename__}.{fil.name}={repr(filter_by[fil])} '
+                    else:
+                        request += f'{fil.owner.__tablename__}.{fil.name}={repr(filter_by[fil])} '
 
     try:
         with psycopg2.connect(
