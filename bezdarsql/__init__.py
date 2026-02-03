@@ -141,11 +141,11 @@ def update(table, **kwargs):
     request = f'update {table.__tablename__} set '
     values = kwargs['values']
     for index, value in enumerate(values):
-        request += f'{value}={repr(values[value])} ' + (', ' if index + 1 != len(values) else 'where ')
+        request += f'{value.name}={repr(values[value])} ' + (', ' if index + 1 != len(values) else 'where ')
 
     where_s = kwargs['where']
     for index, where in enumerate(where_s):
-        request += f'{where}={repr(where_s[where])} ' + (', ' if index + 1 != len(where_s) else ';')
+        request += f'{where.owner.__tablename__}.{where.name}={repr(where_s[where])} ' + (', ' if index + 1 != len(where_s) else ';')
 
     try:
         with psycopg2.connect(
