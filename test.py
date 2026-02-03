@@ -1,4 +1,4 @@
-from bezdarsql import select, select_join
+from bezdarsql import select, select_join, delete
 import dataclasses
 from bezdarsql.base import Base, Column
 
@@ -26,4 +26,4 @@ class Relief(Base):
     discount: int = Column()
 
 
-print(select_join((User, Relief), value='*', filter_by=({User.id: '14'})))
+print(delete(User, where={User.id: 13}))
